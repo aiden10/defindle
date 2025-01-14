@@ -1,0 +1,8 @@
+* Make grid boxes clickable    
+Display game search bar and guess button when clicked
+Search bar needs autocomplete
+Get prompts for rows and columns (tags/categories)
+Check if guessed game matches the respective prompts
+Update the cell to display the results of checking the player guess
+Calculate score after all grids are filled
+End screen
