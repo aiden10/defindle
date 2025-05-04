@@ -1,0 +1,17 @@
+.wordModal {
+    border-radius: 8px;
+}
+#modal-modal-title {
+    font-size: 54px;
+    font-family: "Source Serif 4", serif;
+    font-optical-sizing: auto;
+    font-weight: 350;
+    font-style: normal;  
+}
+#modal-modal-description {
+    font-size: 32px;
+    font-family: "Source Serif 4", serif;
+    font-optical-sizing: auto;
+    font-weight: 350;
+    font-style: normal;  
+}

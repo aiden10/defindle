@@ -47,31 +47,10 @@ export default function MyApp() {
   return (
     <div key={gameCount}>
       <h2 id='instruction'><b>defindle</b>: guess the word by its definition</h2>
-      <WordInput
-        clearInput={inputClear}
-        setGuessedWord={(word: string) => {guessedWord.current = word; setGuesses([...guesses])}}/>
-      <GuessButton 
-        guessedWord={guessedWord.current}
-        actualWord={definition[0]}
-        setGuesses={setGuesses}
-        hints={hints}
-        guesses={guesses}
-        setHints={setHintsCallback}
-        setOpen={setOpen}
-        setHeading={setModalHeading}
-        setMessage={setModalMessage}
-        clearInput={setInputClear}
-        resetGame={resetGame}/>
-      <GiveupButton 
-        actualWord={definition[0]}
-        resetGame={resetGame}
-        setOpen={setOpen}
-        setHeading={setModalHeading}
-        setMessage={setModalMessage}/>
-      <DefinitionContainer 
-        word={definition[0]}
-        definition={definition[1]}/>
-      <div id='list-container'>
+      <div id='row-container'>
+        <DefinitionContainer 
+          word={definition[0]}
+          definition={definition[1]}/>
         <Hints 
           hints={hints}/>
         <Guesses 
@@ -82,6 +61,29 @@ export default function MyApp() {
         message={modalMessage}
         open={open}
         setOpen={setOpen}/>
+      <div id='inputs'>
+        <WordInput
+          clearInput={inputClear}
+          setGuessedWord={(word: string) => {guessedWord.current = word; setGuesses([...guesses])}}/>
+        <GuessButton 
+          guessedWord={guessedWord.current}
+          actualWord={definition[0]}
+          setGuesses={setGuesses}
+          hints={hints}
+          guesses={guesses}
+          setHints={setHintsCallback}
+          setOpen={setOpen}
+          setHeading={setModalHeading}
+          setMessage={setModalMessage}
+          clearInput={setInputClear}
+          resetGame={resetGame}/>
+        <GiveupButton 
+          actualWord={definition[0]}
+          resetGame={resetGame}
+          setOpen={setOpen}
+          setHeading={setModalHeading}
+          setMessage={setModalMessage}/>
+      </div>
     </div>
   );
 }

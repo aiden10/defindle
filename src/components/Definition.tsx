@@ -11,7 +11,7 @@ export default function DefinitionContainer({definition, word}: DefinitionContai
     const regex = new RegExp(`\\b${escapedWord}\\b`, "gi");
     const parsedDefinition = definition.replace(regex, "<REDACTED>");
     return (
-        <div>
+        <div id='definition-container'>
             <h1>{parsedDefinition}</h1>
         </div>
     );

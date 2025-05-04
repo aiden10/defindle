@@ -1,7 +1,12 @@
 h1 {
+  color: rgb(45, 45, 45);
   font-family: "Source Serif 4", serif;
   font-optical-sizing: auto;
   font-weight: 350;
   font-style: normal;
 }
-  
+
+#definition-container {
+  padding-left: 1vw;
+  max-width: 60%;
+}

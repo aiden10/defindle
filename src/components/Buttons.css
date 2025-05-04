@@ -9,6 +9,8 @@
     font-style: normal !important;
     text-transform: lowercase !important;
     background-color: #f5f5f5;
+    margin: 5px;
+    margin-top: 10px;
 }
 .MuiButton-root.MuiButton-outlined:hover {
     background-color: white;
