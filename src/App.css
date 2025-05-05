@@ -10,8 +10,8 @@ body {
     gap: 4vw;
     overflow: scroll;
     padding-bottom: 15px;
-    max-height: 60vmin;
-    min-height: 60vmin;
+    max-height: 60vh;
+    min-height: 60vh;
     border-bottom: solid;
     border-bottom-style: inset;
     border-bottom-width: 2px;
