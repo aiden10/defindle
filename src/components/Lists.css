@@ -5,7 +5,7 @@
     font-optical-sizing: auto;
     font-weight: 300;
     font-style: normal;
-    min-height: 100%;
+    height: fit-content;
 }
 #list-subheader{
     color: white;
@@ -15,4 +15,5 @@
     font-weight: 250;
     font-style: normal;  
     background-color: #c1c17d !important;
+    height: fit-content;
 }
