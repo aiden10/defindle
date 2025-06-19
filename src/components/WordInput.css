@@ -1,11 +1,11 @@
-/* Style the input field */
+
 .MuiAutocomplete-root .MuiInputBase-root {
     background-color: #f5f5f5;
     border-radius: 8px;
     width: 100%;
   }
   
-  /* Style the input text */
+
   .MuiAutocomplete-root .MuiInputBase-input {
     color: #333;
     font-size: 16px;
@@ -17,7 +17,7 @@
 
   }
   
-  /* Style the label */
+
   .MuiAutocomplete-root .MuiInputLabel-root {
     color: #666 !important;
     font-weight: 500;
@@ -26,7 +26,7 @@
     font-style: normal;  
   }
   
-  /* Style the dropdown paper */
+
   .MuiAutocomplete-popper .MuiPaper-root {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -34,7 +34,7 @@
 
   }
   
-  /* Style the dropdown options */
+
   .MuiAutocomplete-popper .MuiAutocomplete-option {
     padding: 10px 16px;
     font-size: 14px;
@@ -45,23 +45,23 @@
 
   }
     
-  /* Style hover state of options */
+
   .MuiAutocomplete-popper .MuiAutocomplete-option:hover {
     background-color: rgba(0, 0, 0, 0.04);
   }
   
-  /* Style focused input */
+
   .MuiAutocomplete-root .Mui-focused {
     border-color: #000000 !important;
   }
   
-  /* Remove default outline */
+
   .MuiAutocomplete-root .MuiOutlinedInput-notchedOutline {
     border-color: #ddd;
   }
   
-  /* Style focused outline */
-.MuiAutocomplete-root .Mui-focused .MuiOutlinedInput-notchedOutline {
+
+  .MuiAutocomplete-root .Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #000000 !important;
     border-width: 2px;
   }

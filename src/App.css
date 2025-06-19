@@ -1,14 +1,28 @@
 body {
     background-color: rgb(244, 244, 235);
     background-image: url("./bedge-grunge.png");
+    overflow: hidden;
+}
+
+#lists-container{
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+}
+
+@media (min-width: 768px) {
+  #lists-container{
+        width: 20vw;
+    }
 }
 
 #row-container{
     display: flex;
-    flex-direction: row;
-    padding-right: 2vw;
-    gap: 4vw;
+    flex-direction: column;
+    align-items: center;
+    text-align: start;
     overflow: scroll;
+    padding-top: 15px;
     padding-bottom: 15px;
     max-height: 60vh;
     min-height: 60vh;
@@ -16,6 +30,16 @@ body {
     border-bottom-style: inset;
     border-bottom-width: 2px;
     border-color: #c1c17d;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+  #row-container{
+    flex-direction: row;
+    align-items: baseline;
+    gap: 10px;
+    margin-right: 10vw;
+    }
 }
 
 #instruction{
@@ -55,6 +79,7 @@ body {
     left: 0;
     padding: 1vmax;
     cursor: pointer;
+    z-index: 100;
 }
 #github:hover{
     opacity: 0.5;

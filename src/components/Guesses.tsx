@@ -11,7 +11,7 @@ interface guessesProps{
 function Guesses({ guesses }: guessesProps){
     return (
         <List
-            sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+            sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', 'margin-top': 10 }}
             component="nav"
             aria-labelledby="list-subheader"
             subheader={

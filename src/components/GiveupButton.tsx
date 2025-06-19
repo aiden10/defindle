@@ -2,21 +2,18 @@ import Button from '@mui/material/Button';
 import './Buttons.css';
 
 interface giveupProps {
-    actualWord: string
-    resetGame: Function
-    setOpen: Function // for actual word modal
-    setHeading: Function
-    setMessage: Function
+    word: string
+    setWinScreen: Function
+    setWinScreenText: Function
 }
 
-export default function GiveupButton({actualWord, resetGame, setOpen, setMessage, setHeading}: giveupProps){
+export default function GiveupButton({word, setWinScreen, setWinScreenText}: giveupProps){
     return (
         <Button 
             variant="outlined" onClick={() => {
-                resetGame(); 
-                setOpen(true);
-                setHeading("The word is...");
-                setMessage(`${actualWord}`);
+                setWinScreenText(`The word was ${word}. Try again tomorrow!`);
+                setWinScreen(true);
+                localStorage.setItem("word", word);
                 }
             }>
             give up?

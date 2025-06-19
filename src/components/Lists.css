@@ -6,6 +6,7 @@
     font-weight: 300;
     font-style: normal;
     height: fit-content;
+    z-index: -1;
 }
 #list-subheader{
     color: white;

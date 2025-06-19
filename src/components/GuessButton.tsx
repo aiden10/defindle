@@ -5,8 +5,6 @@ import { useEffect } from 'react';
 interface guessProps {
     actualWord: string
     guessedWord: string
-    setScore: Function
-    score: number
     hints: string[]
     guesses: string[]
     setHints: Function
@@ -15,7 +13,8 @@ interface guessProps {
     setHeading: Function
     setMessage: Function
     clearInput: Function
-    resetGame: Function
+    setWinScreen: Function
+    setWinScreenText: Function
 }
 
 function updateHints(word: string, currentHints: string[], setHints: Function){
@@ -30,46 +29,45 @@ function updateHints(word: string, currentHints: string[], setHints: Function){
     }
 }
 
-function handleGuess(guessedWord: string, actualWord: string, setScore: Function, score: number, hints: string[], guesses: string[], setHints: Function, setGuesses: Function, setOpen: Function, setHeading: Function, setMessage: Function, clearInput: Function, resetGame: Function){
+function handleGuess(guessedWord: string, actualWord: string, hints: string[], guesses: string[], setHints: Function, setGuesses:
+     Function, setOpen: Function, setHeading: Function, setMessage: Function, clearInput: Function, setWinScreen: Function, setWinScreenText: Function){
     clearInput(guesses.length + 1);
+
+    // Blank guess
     if (guessedWord === ""){
         setOpen(true);
         setHeading("Guess cannot be blank!");
         setMessage("");
         return;
     }
-    if (!guesses.includes(guessedWord))
-        setGuesses([...guesses, guessedWord]);
-    else{
+
+    // Already guessed word
+    if (guesses.includes(guessedWord)){
         setOpen(true);
         setHeading("Already guessed");
         setMessage(`The word: '${guessedWord}' has already been guessed`);
         return;
     }
+    // Incorrect guess
     if (guessedWord.toLowerCase() !== actualWord.toLowerCase()){
         updateHints(actualWord, hints, setHints);
-        setScore(score - 1); // lose 1 point if the word was wrong
+        setGuesses([...guesses, guessedWord]);
     }
-    else{ // correct guess
-        setOpen(true);
-        setHeading("Congratulations");
-        setMessage(`The word was ${actualWord}.`);
-        if (hints.length === 0)
-            setScore(score + 3); // 3 points if no hints were needed
-        else if (hints.length === 1)
-            setScore(score + 2); // 2 points if one hint was needed
-        else if (hints.length === 2)
-            setScore(score + 1); // 1 points if one hint was needed
-        // no points if 3 hints were needed
-        resetGame();
+    // Correct guess
+    else{ 
+        localStorage.setItem('word', actualWord);
+        setWinScreenText("Congratulations, the word is ", actualWord);
+        setWinScreen(true);
     }
 }
 
-export default function GuessButton({guessedWord, actualWord, setScore, score, hints, guesses, setHints, setGuesses, setOpen, setHeading, setMessage, clearInput, resetGame}: guessProps){
+export default function GuessButton({guessedWord, actualWord, hints, guesses, setHints, setGuesses,
+     setOpen, setHeading, setMessage, clearInput, setWinScreen, setWinScreenText}: guessProps){
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
             if (event.key === 'Enter') {
-                handleGuess(guessedWord, actualWord, setScore, score, hints, guesses, setHints, setGuesses, setOpen, setHeading, setMessage, clearInput, resetGame);
+                handleGuess(guessedWord, actualWord, hints, guesses, setHints, setGuesses, setOpen, setHeading,
+                     setMessage, clearInput, setWinScreen, setWinScreenText);
             }
         };
 
@@ -78,9 +76,10 @@ export default function GuessButton({guessedWord, actualWord, setScore, score, h
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
         };
-    }, [guessedWord, actualWord, setScore, score, hints, guesses, setHints, setGuesses, setOpen, setHeading, setMessage, clearInput, resetGame]);
+    }, [guessedWord, actualWord, hints, guesses, setHints, setGuesses, setOpen, setHeading, setMessage, clearInput, setWinScreen]);
     return (
-        <Button variant="outlined" onClick={() => {handleGuess(guessedWord, actualWord, setScore, score, hints, guesses, setHints, setGuesses, setOpen, setHeading, setMessage, clearInput, resetGame)}}>
+        <Button variant="outlined" onClick={() => {handleGuess(guessedWord, actualWord, hints, guesses, setHints, 
+        setGuesses, setOpen, setHeading, setMessage, clearInput, setWinScreen, setWinScreenText)}}>
             guess
         </Button>
     )

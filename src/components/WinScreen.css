@@ -1,0 +1,39 @@
+#win-screen {
+  position: absolute;
+  background-color: #e4e2d8;
+  width: 100%;
+  height: 100vh;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+    #win-screen h1 {
+        padding: 0px;
+    }
+}
+
+#win-screen h1 {
+    font-family: "Source Serif 4", serif;
+    font-weight: 400;
+    padding: 50px;
+    font-size: 48px;
+    text-align: center;
+}
+
+#win-screen h2 {
+  display: inline-block;
+  font-family: "Source Serif 4", serif;
+  font-weight: 300;
+  font-size: 42px;
+  background-color: black;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+#win-screen h2:hover{
+    color: white;
+}
