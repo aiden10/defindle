@@ -70,9 +70,16 @@ body {
     left: 15%;
     right: 25%;
     bottom: 0px;
-    margin-bottom: 4vh;
+    margin-bottom: 1.5vh;
     width: 75%;
 }
+
+@media (min-width: 768px) {
+  #inputs{
+    margin-bottom: 4vh;
+    }
+}
+
 #github {
     position: fixed;
     bottom: 0;
