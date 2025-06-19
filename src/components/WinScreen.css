@@ -31,6 +31,7 @@
   font-size: 42px;
   background-color: black;
   padding: 0.25rem 0.5rem;
+  user-select: none;
   border-radius: 4px;
 }
 

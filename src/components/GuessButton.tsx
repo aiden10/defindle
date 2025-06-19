@@ -52,6 +52,12 @@ function handleGuess(guessedWord: string, actualWord: string, hints: string[], g
     if (guessedWord.toLowerCase() !== actualWord.toLowerCase()){
         updateHints(actualWord, hints, setHints);
         setGuesses([...guesses, guessedWord]);
+        if (guesses.length === 4){
+            // lose after 4 incorrect guesses
+            localStorage.setItem('word', actualWord);
+            setWinScreenText(`The word was ${actualWord}. Try again tomorrow!`);
+            setWinScreen(true);
+        }
     }
     // Correct guess
     else{ 
@@ -76,7 +82,7 @@ export default function GuessButton({guessedWord, actualWord, hints, guesses, se
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
         };
-    }, [guessedWord, actualWord, hints, guesses, setHints, setGuesses, setOpen, setHeading, setMessage, clearInput, setWinScreen]);
+    }, [guessedWord, actualWord, hints, guesses, setHints, setGuesses, setOpen, setHeading, setMessage, clearInput, setWinScreen, setWinScreenText]);
     return (
         <Button variant="outlined" onClick={() => {handleGuess(guessedWord, actualWord, hints, guesses, setHints, 
         setGuesses, setOpen, setHeading, setMessage, clearInput, setWinScreen, setWinScreenText)}}>

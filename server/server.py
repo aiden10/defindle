@@ -22,8 +22,8 @@ def get_daily_word():
     except:
         pass
 
-    allowed_words = s3_read_json("allowed.json")
     definitions = s3_read_json("definitions.json")
+    allowed_words = list(definitions.keys())
 
     hash_int = int(hashlib.md5(date_string.encode()).hexdigest(), 16)
     word = ""
@@ -37,37 +37,11 @@ def get_daily_word():
     return [word, definition]
 
 def lambda_handler(event, context):
-    word_info = get_daily_word()
-    http_method = event['requestContext']['http']['method']
-    
-    if http_method == "GET":
-        return {
-            "statusCode": 200,
-            "headers": {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "https://defindle.vercel.app",
-            },
-            "body": json.dumps(word_info)
-        }
-
-    if http_method == "OPTIONS":
-        return {
-            "statusCode": 200,
-            "headers": {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "https://defindle.vercel.app",
-                "Access-Control-Allow-Methods": "OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type",
-            },
-            "body": ""
-        }
-
+    word_info = {"definition": get_daily_word()}
     return {
-        "statusCode": 405,
-        "headers": {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "https://defindle.vercel.app",
-        },
-        "body": json.dumps({"error": "method not supported"})
+        "headers": {"Content-Type": "application/json"},
+        "statusCode": 200,
+        "body": json.dumps(word_info)
     }
+
         

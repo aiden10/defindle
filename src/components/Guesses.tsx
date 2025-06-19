@@ -16,7 +16,7 @@ function Guesses({ guesses }: guessesProps){
             aria-labelledby="list-subheader"
             subheader={
             <ListSubheader component="div" id="list-subheader">
-                Guesses
+                Guesses ({4 - guesses.length} left)
             </ListSubheader>
             }>
             {guesses.map((guess, index: number) => (

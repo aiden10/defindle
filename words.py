@@ -39,8 +39,7 @@ def main() -> None:
     with open("new_definitions.json", "w", encoding='utf-8') as out:
         json.dump(definitions, out)
     
-with open("allowed.txt", "r") as file:
-    words = file.readlines()
-    words = [word.strip() for word in words]
-    out = open("allowed.json", "w")
-    json.dump(words, out)
+with open("server/definitions.json", "r") as allowed:
+    new_definitions = {}
+    definitions = json.load(allowed)
+    print(len(definitions))
