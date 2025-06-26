@@ -72,6 +72,7 @@ export default function MyApp() {
         <DefinitionContainer 
           word={definition[0]}
           definition={definition[1]}/>
+          <div id='spacing'/>
           <div id='lists-container'>
             <Hints 
               hints={hints}/>

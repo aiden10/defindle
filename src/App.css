@@ -8,11 +8,13 @@ body {
     display: flex;
     flex-direction: column;
     width: 75%;
+    margin-right: 0;
 }
 
 @media (min-width: 768px) {
   #lists-container{
         width: 20vw;
+        margin-right: 4vw;
     }
 }
 
@@ -90,4 +92,8 @@ body {
 }
 #github:hover{
     opacity: 0.5;
+}
+
+#spacing {
+    flex: 100%;
 }
