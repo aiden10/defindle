@@ -24,6 +24,7 @@ export default function MyApp() {
   const [definition, setDefinition] = useState<[string, string]>(["", ""]);
   const [open, setOpen] = useState(false);
   const [winScreenVisible, setWinScreenVisible] = useState(false);
+  const [endCause, setEndCause] = useState(END_CAUSES.NONE);
   const setHintsCallback = useCallback(
     (newHints: string[]) => setHints(newHints),
     []
@@ -42,6 +43,7 @@ export default function MyApp() {
         let savedResult: string = localStorage.getItem('word') || "n/a";
         console.log(json.definition)
         if (json.definition[0] === savedResult){
+          setEndCause(END_CAUSES.ALREADY_DONE);
           setWinScreenVisible(true);
         }
       }
@@ -67,7 +69,7 @@ export default function MyApp() {
       <WinScreen
         word={definition[0]}
         text={winScreenText}
-        endCause={END_CAUSES.NONE}
+        endCause={endCause}
         visible={winScreenVisible}>
       </WinScreen>
       <h2 id='instruction'><b>defindle</b>: guess the word by its definition</h2>
@@ -104,11 +106,13 @@ export default function MyApp() {
           clearInput={setInputClear}
           setWinScreen={setWinScreenVisible}
           setWinScreenText={setWinScreenText}
+          setEndCause={setEndCause}
           />
         <GiveupButton 
           word={definition[0]}
           setWinScreen={setWinScreenVisible}
-          setWinScreenText={setWinScreenText}          
+          setWinScreenText={setWinScreenText}   
+          setEndCause={setEndCause}       
           />
       </div>
       <a href="https://github.com/aiden10/defindle/" target='_blank' rel="noreferrer">

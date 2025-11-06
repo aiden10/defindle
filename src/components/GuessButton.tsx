@@ -1,6 +1,7 @@
 import Button from '@mui/material/Button';
 import './Buttons.css';
 import { useEffect } from 'react';
+import { END_CAUSES } from '../shared/types';
 
 interface guessProps {
     actualWord: string
@@ -15,6 +16,7 @@ interface guessProps {
     clearInput: Function
     setWinScreen: Function
     setWinScreenText: Function
+    setEndCause: Function
 }
 
 function updateHints(word: string, currentHints: string[], setHints: Function){
@@ -30,7 +32,7 @@ function updateHints(word: string, currentHints: string[], setHints: Function){
 }
 
 function handleGuess(guessedWord: string, actualWord: string, hints: string[], guesses: string[], setHints: Function, setGuesses:
-     Function, setOpen: Function, setHeading: Function, setMessage: Function, clearInput: Function, setWinScreen: Function, setWinScreenText: Function){
+     Function, setOpen: Function, setHeading: Function, setMessage: Function, clearInput: Function, setWinScreen: Function, setWinScreenText: Function, setEndCause: Function){
     clearInput(guesses.length + 1);
 
     // Blank guess
@@ -56,6 +58,7 @@ function handleGuess(guessedWord: string, actualWord: string, hints: string[], g
             // lose after 4 incorrect guesses
             localStorage.setItem('word', actualWord);
             setWinScreenText(`The word was ${actualWord}. Try again tomorrow!`);
+            setEndCause(END_CAUSES.INCORRECT_GUESSES);
             setWinScreen(true);
         }
     }
@@ -63,17 +66,18 @@ function handleGuess(guessedWord: string, actualWord: string, hints: string[], g
     else{ 
         localStorage.setItem('word', actualWord);
         setWinScreenText(`Congratulations, the word is ${actualWord}`, actualWord);
+        setEndCause(END_CAUSES.CORRECT);
         setWinScreen(true);
     }
 }
 
 export default function GuessButton({guessedWord, actualWord, hints, guesses, setHints, setGuesses,
-     setOpen, setHeading, setMessage, clearInput, setWinScreen, setWinScreenText}: guessProps){
+     setOpen, setHeading, setMessage, clearInput, setWinScreen, setWinScreenText, setEndCause}: guessProps){
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
             if (event.key === 'Enter') {
                 handleGuess(guessedWord, actualWord, hints, guesses, setHints, setGuesses, setOpen, setHeading,
-                     setMessage, clearInput, setWinScreen, setWinScreenText);
+                     setMessage, clearInput, setWinScreen, setWinScreenText, setEndCause);
             }
         };
 
@@ -82,10 +86,10 @@ export default function GuessButton({guessedWord, actualWord, hints, guesses, se
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
         };
-    }, [guessedWord, actualWord, hints, guesses, setHints, setGuesses, setOpen, setHeading, setMessage, clearInput, setWinScreen, setWinScreenText]);
+    }, [guessedWord, actualWord, hints, guesses, setHints, setGuesses, setOpen, setHeading, setMessage, clearInput, setWinScreen, setWinScreenText, setEndCause]);
     return (
         <Button variant="outlined" onClick={() => {handleGuess(guessedWord, actualWord, hints, guesses, setHints, 
-        setGuesses, setOpen, setHeading, setMessage, clearInput, setWinScreen, setWinScreenText)}}>
+        setGuesses, setOpen, setHeading, setMessage, clearInput, setWinScreen, setWinScreenText, setEndCause)}}>
             guess
         </Button>
     )

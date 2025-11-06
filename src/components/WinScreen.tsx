@@ -14,7 +14,7 @@ interface winScreenProps{
 
 export default function WinScreen({endCause, visible, word, text}: winScreenProps){
     useEffect(() => {
-        if (!visible && endCause !== END_CAUSES.GIVE_UP) return;
+        if (!visible || endCause !== END_CAUSES.CORRECT) return;
 
         const duration = 1000;
         const end = Date.now() + duration;
@@ -36,7 +36,7 @@ export default function WinScreen({endCause, visible, word, text}: winScreenProp
     return visible && 
     <div id='win-screen'>
         <h1>{text}</h1>
-        {endCause === END_CAUSES.ALREADY_DONE && <h2>{word}</h2>}
+        {(endCause === END_CAUSES.ALREADY_DONE) && <h2>{word}</h2>}
     </div>
 }
 
