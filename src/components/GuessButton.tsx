@@ -62,7 +62,7 @@ function handleGuess(guessedWord: string, actualWord: string, hints: string[], g
     // Correct guess
     else{ 
         localStorage.setItem('word', actualWord);
-        setWinScreenText("Congratulations, the word is ", actualWord);
+        setWinScreenText(`Congratulations, the word is ${actualWord}`, actualWord);
         setWinScreen(true);
     }
 }

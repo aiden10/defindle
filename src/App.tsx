@@ -8,7 +8,9 @@ import GiveupButton from './components/GiveupButton.tsx';
 import Guesses from './components/Guesses.tsx';
 import WordModal from './components/WordModal.tsx';
 import WinScreen from './components/WinScreen.tsx';
+import './shared/types.ts';
 import './App.css';
+import { END_CAUSES } from './shared/types.ts';
 
 export default function MyApp() {
 
@@ -65,6 +67,7 @@ export default function MyApp() {
       <WinScreen
         word={definition[0]}
         text={winScreenText}
+        endCause={END_CAUSES.NONE}
         visible={winScreenVisible}>
       </WinScreen>
       <h2 id='instruction'><b>defindle</b>: guess the word by its definition</h2>
