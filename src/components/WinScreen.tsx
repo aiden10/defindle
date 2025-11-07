@@ -1,20 +1,15 @@
-
 import './WinScreen.css';
 import '../shared/types';
 import confetti from 'canvas-confetti';
 import { useEffect } from 'react';
 import { END_CAUSES } from '../shared/types';
+import { useGame } from '../shared/GameContext';
 
-interface winScreenProps{
-    visible: boolean;
-    endCause: END_CAUSES;
-    word: string;
-    text: string;
-}
-
-export default function WinScreen({endCause, visible, word, text}: winScreenProps){
+export default function WinScreen(){
+    const { winScreenVisible, endCause, definition, winScreenText } = useGame();
+    
     useEffect(() => {
-        if (!visible || endCause !== END_CAUSES.CORRECT) return;
+        if (!winScreenVisible || endCause !== END_CAUSES.CORRECT) return;
 
         const duration = 1000;
         const end = Date.now() + duration;
@@ -31,12 +26,11 @@ export default function WinScreen({endCause, visible, word, text}: winScreenProp
             });
             if (Date.now() < end) requestAnimationFrame(frame);
         })();
-    }, [visible, endCause]);
+    }, [winScreenVisible, endCause]);
 
-    return visible && 
+    return winScreenVisible && 
     <div id='win-screen'>
-        <h1>{text}</h1>
-        {(endCause === END_CAUSES.ALREADY_DONE) && <h2>{word}</h2>}
+        <h1>{winScreenText}</h1>
+        {(endCause === END_CAUSES.ALREADY_DONE) && <h2>{definition[0]}</h2>}
     </div>
 }
-

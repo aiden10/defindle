@@ -1,22 +1,18 @@
 import Button from '@mui/material/Button';
 import './Buttons.css';
 import { END_CAUSES } from '../shared/types';
+import { useGame } from '../shared/GameContext';
 
-interface giveupProps {
-    word: string
-    setWinScreen: Function
-    setWinScreenText: Function
-    setEndCause: Function
-}
-
-export default function GiveupButton({word, setWinScreen, setWinScreenText, setEndCause}: giveupProps){
+export default function GiveupButton(){
+    const { definition, setWinScreenVisible, setWinScreenText, setEndCause } = useGame();
+    
     return (
         <Button 
             variant="outlined" onClick={() => {
-                setWinScreenText(`The word was ${word}. Try again tomorrow!`);
+                setWinScreenText(`The word was ${definition[0]}. Try again tomorrow!`);
                 setEndCause(END_CAUSES.GIVE_UP);
-                setWinScreen(true);
-                localStorage.setItem("word", word);
+                setWinScreenVisible(true);
+                localStorage.setItem("word", definition[0]);
                 }
             }>
             give up?

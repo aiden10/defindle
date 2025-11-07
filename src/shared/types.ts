@@ -6,3 +6,4 @@ export enum END_CAUSES {
     ALREADY_DONE,
     INCORRECT_GUESSES
 };
+

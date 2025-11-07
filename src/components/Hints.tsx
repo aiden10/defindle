@@ -3,12 +3,11 @@ import ListItem from '@mui/material/ListItem';
 import { ListSubheader } from '@mui/material';
 import './Lists.css';
 import React from 'react';
+import { useGame } from '../shared/GameContext';
 
-interface HintsProps{
-    hints: String[];
-}
-
-function Hints({ hints }: HintsProps){
+function Hints(){
+    const { hints } = useGame();
+    
     return (
         <List
             sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', 'margin-top': 10}}

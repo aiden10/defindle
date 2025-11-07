@@ -1,35 +1,28 @@
-
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useEffect } from 'react';
 import WordInput from './components/WordInput.tsx';
 import DefinitionContainer from './components/Definition.tsx';
 import Hints from './components/Hints.tsx';
 import GuessButton from './components/GuessButton.tsx';
 import GiveupButton from './components/GiveupButton.tsx';
 import Guesses from './components/Guesses.tsx';
-import WordModal from './components/WordModal.tsx';
+import WordToast from './components/WordToast.tsx';
 import WinScreen from './components/WinScreen.tsx';
 import './shared/types.ts';
 import './App.css';
 import { END_CAUSES } from './shared/types.ts';
+import { useGame } from './shared/GameContext.tsx';
 
 export default function MyApp() {
-
-  const [inputClear, setInputClear] = useState<number>(0);
-  const [modalHeading, setModalHeading] = useState<string>("");
-  const [modalMessage, setModalMessage] = useState<string>("");
-  const [winScreenText, setWinScreenText] = useState<string>("You've already completed today's word. Come back tomorrow.");
-  const [hints, setHints] = useState<string[]>([]);
-  const [guesses, setGuesses] = useState<string[]>([]);
-  const guessedWord = useRef<string>("");
-  const [definition, setDefinition] = useState<[string, string]>(["", ""]);
-  const [open, setOpen] = useState(false);
-  const [winScreenVisible, setWinScreenVisible] = useState(false);
-  const [endCause, setEndCause] = useState(END_CAUSES.NONE);
-  const setHintsCallback = useCallback(
-    (newHints: string[]) => setHints(newHints),
-    []
-  );
-  
+  const {
+    definition,
+    setDefinition,
+    setEndCause,
+    setWinScreenVisible,
+    setToastHeading,
+    setToastMessage,
+    setToastVisible
+  } = useGame();
+    
   // fetch daily word, and definition, and check local storage
   useEffect(() => {
     const fetchData = async () => {
@@ -48,72 +41,40 @@ export default function MyApp() {
         }
       }
       catch (error) {
-        setModalHeading("Error loading word");
+        setToastHeading("Error loading word");
         if (error instanceof Error) {
           console.error(error.message);
-          setModalMessage(error.message);
+          setToastMessage(error.message);
         } 
         else {
           console.error('An unknown error occurred:', error);
-          setModalMessage('An unknown error occurred');
+          setToastMessage('An unknown error occurred');
         }
-        setOpen(true);
+        setToastVisible(true);
       }
     };
 
     fetchData();
-  }, []);
+  }, [setDefinition, setEndCause, setWinScreenVisible, setToastHeading, setToastMessage, setToastVisible]);
 
   return (
     <div>
-      <WinScreen
-        word={definition[0]}
-        text={winScreenText}
-        endCause={endCause}
-        visible={winScreenVisible}>
-      </WinScreen>
+      <WinScreen />
       <h2 id='instruction'><b>defindle</b>: guess the word by its definition</h2>
       <div id='row-container'>
         <DefinitionContainer 
           word={definition[0]}
           definition={definition[1]}/>
           <div id='lists-container'>
-            <Hints 
-              hints={hints}/>
-            <Guesses 
-              guesses={guesses}/>
+            <Hints />
+            <Guesses />
           </div>
       </div>
-      <WordModal
-        heading={modalHeading}
-        message={modalMessage}
-        open={open}
-        setOpen={setOpen}/>
+      <WordToast/>
       <div id='inputs'>
-        <WordInput
-          clearInput={inputClear}
-          setGuessedWord={(word: string) => {guessedWord.current = word; setGuesses([...guesses])}}/>
-        <GuessButton 
-          guessedWord={guessedWord.current}
-          actualWord={definition[0]}
-          setGuesses={setGuesses}
-          hints={hints}
-          guesses={guesses}
-          setHints={setHintsCallback}
-          setOpen={setOpen}
-          setHeading={setModalHeading}
-          setMessage={setModalMessage}
-          clearInput={setInputClear}
-          setWinScreen={setWinScreenVisible}
-          setWinScreenText={setWinScreenText}
-          setEndCause={setEndCause}
-          />
-        <GiveupButton 
-          word={definition[0]}
-          setWinScreen={setWinScreenVisible}
-          setWinScreenText={setWinScreenText}   
-          setEndCause={setEndCause}       
-          />
+        <WordInput />
+        <GuessButton />
+        <GiveupButton />
       </div>
       <a href="https://github.com/aiden10/defindle/" target='_blank' rel="noreferrer">
         <svg

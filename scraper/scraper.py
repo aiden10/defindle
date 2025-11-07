@@ -4,11 +4,15 @@ import requests
 import bs4
 import time
 
-current_index = 0
+current_index = 99
+target_index = 200
 meriam_url = "https://www.merriam-webster.com/dictionary/"
 all_definitions = {}
 words = []
 
+with open("scraper/all_definitions.json", "r", encoding="utf-8") as f:
+    all_definitions = json.load(f)
+    
 with open("scraper/progress.json", "r") as progress_file:
     progress = json.load(progress_file)
     current_index = progress["current_index"]
@@ -16,8 +20,8 @@ with open("scraper/progress.json", "r") as progress_file:
 with open("scraper/wordlist.txt", "r", encoding="utf-8") as file:
     words = [line.strip() for line in file.readlines()]
 
-for i in range(current_index, len(words)):
-    print(f"{i}/{len(words)}")
+for i in range(current_index, target_index):
+    print(f"{i}/{target_index}")
     res = requests.get(f"{meriam_url}{words[i]}")
     if res.status_code != 200:
         print(f"failed to get entry for: {words[i]} (index: {i})")
@@ -30,5 +34,8 @@ for i in range(current_index, len(words)):
     all_definitions[words[i]] = definitions
     time.sleep(0.1)
 
-with open("scraper/all_definitions", "w", encoding="utf-8") as f:
-    json.dump(all_definitions, f)
+with open("scraper/all_definitions.json", "w", encoding="utf-8") as f:
+    json.dump(all_definitions, f, indent=4)
+
+with open("scraper/progress.json", "w") as f:
+    json.dump({"current_index": target_index-1}, f)

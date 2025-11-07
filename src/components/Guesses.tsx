@@ -3,12 +3,11 @@ import ListItem from '@mui/material/ListItem';
 import { ListSubheader } from '@mui/material';
 import React from 'react';
 import './Lists.css';
+import { useGame } from '../shared/GameContext';
 
-interface guessesProps{
-    guesses: String[];
-}
-
-function Guesses({ guesses }: guessesProps){
+function Guesses(){
+    const { guesses } = useGame();
+    
     return (
         <List
             sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', 'margin-top': 10 }}
