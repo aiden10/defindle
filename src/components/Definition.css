@@ -22,8 +22,8 @@
   white-space: pre-line;
   box-sizing: border-box;
   overflow-y: auto;
-  min-height: calc(100vh - 250px);
-  max-height: calc(100vh - 250px);
+  min-height: calc(100dvh - 250px);
+  max-height: calc(100dvh - 250px);
   border-top: solid;
   border-top-width: 3px;
   border-bottom: solid;
@@ -39,8 +39,8 @@
   }
   
   #definition-container {
-    max-height: calc(100vh - 350px);
-    min-height: calc(100vh - 350px);
+    max-height: calc(100dvh - 350px);
+    min-height: calc(100dvh - 350px);
   }
 }
 
@@ -50,8 +50,8 @@
   }
   
   #definition-container {
-    max-height: calc(100vh - 310px);
-    min-height: calc(100vh - 310px);
+    max-height: calc(100dvh - 310px);
+    min-height: calc(100dvh - 310px);
   }
 }
 
