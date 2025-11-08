@@ -10,7 +10,7 @@ import './App.css';
 import './shared/constants.ts';
 import { END_CAUSES } from './shared/types.ts';
 import { useGame } from './shared/GameContext.tsx';
-import { PROD_URL, TEST_URL } from './shared/constants.ts';
+import { PROD_URL, _TEST_URL } from './shared/constants.ts';
 
 export default function MyApp() {
   const {
