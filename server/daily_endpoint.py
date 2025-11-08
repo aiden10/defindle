@@ -4,7 +4,7 @@ from datetime import date
 import hashlib
 
 s3 = boto3.client('s3')
-BUCKET = 'defindle-bucket'
+BUCKET = 'defindle-test-bucket'
 
 def s3_read_json(key):
     response = s3.get_object(Bucket=BUCKET, Key=key)
@@ -18,11 +18,11 @@ def get_daily_word():
     try:
         cache = s3_read_json("cache.json")
         if cache["day"] == date_string:
-            return [cache["word"], cache["definition"]]
+            return {"word": cache["word"], "definition": cache["definition"]}
     except:
         pass
 
-    definitions = s3_read_json("definitions.json")
+    definitions = s3_read_json("all_definitions.json")
     allowed_words = list(definitions.keys())
 
     hash_int = int(hashlib.md5(date_string.encode()).hexdigest(), 16)
@@ -34,12 +34,34 @@ def get_daily_word():
 
     cache = {"day": date_string, "word": word, "definition": definition}
     s3_write_json("cache.json", cache)
-    return [word, definition]
+    return {"word": word, "definition": definition}
 
 def lambda_handler(event, context):
-    word_info = {"definition": get_daily_word()}
+    headers = {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+    }
+    
+    if event.get('httpMethod') == 'OPTIONS':
+        return {
+            "statusCode": 200,
+            "headers": headers,
+            "body": ""
+        }
+
+    try:
+        word_info = get_daily_word()
+    except Exception as e:
+        return {
+            "headers": headers,
+            "statusCode": 500,
+            "body": json.dumps({"error": str(e)})
+        }
+        
     return {
-        "headers": {"Content-Type": "application/json"},
+        "headers": headers,
         "statusCode": 200,
         "body": json.dumps(word_info)
     }

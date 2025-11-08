@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useRef, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useRef, ReactNode } from 'react';
 import { END_CAUSES } from './types';
 
 interface GameContextType {
@@ -10,20 +10,19 @@ interface GameContextType {
     setToastMessage: (message: string) => void;
     winScreenText: string;
     setWinScreenText: (text: string) => void;
-    hints: string[];
-    setHints: (hints: string[]) => void;
     guesses: string[];
     setGuesses: (guesses: string[]) => void;
     guessedWord: React.RefObject<string>;
-    definition: [string, string];
-    setDefinition: (definition: [string, string]) => void;
+    definition: string[];
+    setDefinition: (definition: string[]) => void;
+    word: string;
+    setWord: (word: string) => void;
     toastVisible: boolean;
     setToastVisible: (open: boolean) => void;
     winScreenVisible: boolean;
     setWinScreenVisible: (visible: boolean) => void;
     endCause: END_CAUSES;
     setEndCause: (cause: END_CAUSES) => void;
-    setHintsCallback: (newHints: string[]) => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -33,19 +32,14 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [toastHeading, setToastHeading] = useState<string>("");
     const [toastMessage, setToastMessage] = useState<string>("");
     const [winScreenText, setWinScreenText] = useState<string>("You've already completed today's word. Come back tomorrow.");
-    const [hints, setHints] = useState<string[]>([]);
     const [guesses, setGuesses] = useState<string[]>([]);
     const guessedWord = useRef<string>("");
-    const [definition, setDefinition] = useState<[string, string]>(["", ""]);
+    const [definition, setDefinition] = useState<string[]>([""]);
+    const [word, setWord] = useState<string>("");
     const [toastVisible, setToastVisible] = useState(false);
     const [winScreenVisible, setWinScreenVisible] = useState(false);
     const [endCause, setEndCause] = useState(END_CAUSES.NONE);
     
-    const setHintsCallback = useCallback(
-        (newHints: string[]) => setHints(newHints),
-        []
-    );
-
     const value = {
         inputClear,
         setInputClear,
@@ -55,11 +49,11 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setToastMessage,
         winScreenText,
         setWinScreenText,
-        hints,
-        setHints,
         guesses,
         setGuesses,
         guessedWord,
+        word,
+        setWord,
         definition,
         setDefinition,
         toastVisible,
@@ -68,7 +62,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setWinScreenVisible,
         endCause,
         setEndCause,
-        setHintsCallback,
     };
 
     return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

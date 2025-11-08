@@ -1,20 +1,20 @@
 import { useEffect } from 'react';
 import WordInput from './components/WordInput.tsx';
 import DefinitionContainer from './components/Definition.tsx';
-import Hints from './components/Hints.tsx';
 import GuessButton from './components/GuessButton.tsx';
 import GiveupButton from './components/GiveupButton.tsx';
-import Guesses from './components/Guesses.tsx';
 import WordToast from './components/WordToast.tsx';
 import WinScreen from './components/WinScreen.tsx';
-import './shared/types.ts';
+import Mistakes from './components/Mistakes.tsx';
 import './App.css';
+import './shared/constants.ts';
 import { END_CAUSES } from './shared/types.ts';
 import { useGame } from './shared/GameContext.tsx';
+import { PROD_URL, TEST_URL } from './shared/constants.ts';
 
 export default function MyApp() {
   const {
-    definition,
+    setWord,
     setDefinition,
     setEndCause,
     setWinScreenVisible,
@@ -22,20 +22,20 @@ export default function MyApp() {
     setToastMessage,
     setToastVisible
   } = useGame();
-    
+  
   // fetch daily word, and definition, and check local storage
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://ii3urx3sga.execute-api.us-east-2.amazonaws.com/default/defindle");
+        const response = await fetch(PROD_URL);
         if (!response.ok) {
           throw new Error(`Response status: ${response.status}`);
         }
         const json = await response.json();
         setDefinition(json.definition);
+        setWord(json.word);
         let savedResult: string = localStorage.getItem('word') || "n/a";
-        console.log(json.definition)
-        if (json.definition[0] === savedResult){
+        if (json.word === savedResult){
           setEndCause(END_CAUSES.ALREADY_DONE);
           setWinScreenVisible(true);
         }
@@ -55,22 +55,17 @@ export default function MyApp() {
     };
 
     fetchData();
-  }, [setDefinition, setEndCause, setWinScreenVisible, setToastHeading, setToastMessage, setToastVisible]);
+  }, [setDefinition, setWord, setEndCause, setWinScreenVisible, setToastHeading, setToastMessage, setToastVisible]);
 
   return (
     <div>
       <WinScreen />
-      <h2 id='instruction'><b>defindle</b>: guess the word by its definition</h2>
-      <div id='row-container'>
-        <DefinitionContainer 
-          word={definition[0]}
-          definition={definition[1]}/>
-          <div id='lists-container'>
-            <Hints />
-            <Guesses />
-          </div>
-      </div>
       <WordToast/>
+      <div id="top-info">
+        <h2 id='instruction'><b>defindle</b>: guess the word by its <mark>definition</mark></h2>
+        <Mistakes />
+      </div>
+      <DefinitionContainer />
       <div id='inputs'>
         <WordInput />
         <GuessButton />

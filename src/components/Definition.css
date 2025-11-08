@@ -1,22 +1,60 @@
+
 #definition-container h1 {
   color: rgb(45, 45, 45);
   font-family: "Source Serif 4", serif;
-  font-size: 24px;
+  font-size: 32px;
   font-weight: 350;
   font-style: normal;
+  margin: 0.5em 0;
+  transition: filter 0.3s ease;
+}
+
+#definition-container h1.blurred {
+  filter: blur(8px);
+  user-select: none;
+  pointer-events: none;
 }
 
 #definition-container {
-  max-width: 80%;
-  padding-left: 20px;
-  padding-right: 20px;
-  flex: 100%;
+  padding-left: 1vw;
+  padding-right: 1vw;
+  padding-bottom: 2vh;
   white-space: pre-line;
+  box-sizing: border-box;
+  overflow-y: auto;
+  min-height: calc(100vh - 250px);
+  max-height: calc(100vh - 250px);
+  border-top: solid;
+  border-top-width: 3px;
+  border-bottom: solid;
+  border-bottom-width: 1px;
+  border-color: #a8a86b;
+  scrollbar-width: thin;
+  scrollbar-color: #c1c17d transparent;
 }
 
 @media (min-width: 768px) {
   #definition-container h1{
-    font-size: 38px;
+    font-size: 44px;
+  }
+  
+  #definition-container {
+    max-height: calc(100vh - 350px);
+    min-height: calc(100vh - 350px);
   }
 }
 
+@media (min-width: 1024px) {
+  #definition-container h1{
+    font-size: 34px;
+  }
+  
+  #definition-container {
+    max-height: calc(100vh - 310px);
+    min-height: calc(100vh - 310px);
+  }
+}
+
+mark {
+  background-color: rgba(245, 245, 245, 0.5);
+}

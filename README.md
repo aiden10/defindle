@@ -2,7 +2,7 @@
 Defindle is a daily word guessing game where you guess the word based on its definition
 
 
-You have 5 attempts to guess the word, with one hint given after the first 3 guesses.
+You have 3 attempts to guess the word, with more definitions being revealed after each incorrect guess.
 
-![image](https://github.com/user-attachments/assets/5f186790-3c81-4f57-beb7-e490bf9ebc86)
 
+![image](https://github.com/user-attachments/assets/2c8bf56e-da32-4274-9bd1-aed2f5e3e35d)

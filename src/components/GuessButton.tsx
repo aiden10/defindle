@@ -3,28 +3,15 @@ import './Buttons.css';
 import { useEffect, useCallback } from 'react';
 import { END_CAUSES } from '../shared/types';
 import { useGame } from '../shared/GameContext';
+import { MAX_GUESSES } from '../shared/constants';
 
 var wordKeys = require("../resources/words_keys.json");
-
-function updateHints(word: string, currentHints: string[], setHints: Function) {
-    if (currentHints.length === 0){ // give word length hint
-        setHints([`This word has ${word.length} letters`]);
-    }
-    else if (currentHints.length === 1) { // give first letter hint
-        setHints([...currentHints, `The first letter is '${word[0]}'`]);
-    }
-    else if (currentHints.length === 2) { // give last letter hint
-        setHints([...currentHints, `The last letter is '${word[word.length-1]}'`]);
-    }
-}
 
 export default function GuessButton() {
     const { 
         guessedWord, 
-        definition, 
-        hints, 
+        word,
         guesses, 
-        setHints, 
         setGuesses,
         setToastVisible, 
         setToastHeading, 
@@ -63,25 +50,23 @@ export default function GuessButton() {
             return;
         }
         // Incorrect guess
-        if (guessedWord.current.toLowerCase() !== definition[0].toLowerCase()) {
-            updateHints(definition[0], hints, setHints);
+        if (guessedWord.current.toLowerCase() !== word.toLowerCase()) {
             setGuesses([...guesses, guessedWord.current]);
-            if (guesses.length === 4){
-                // lose after 4 incorrect guesses
-                localStorage.setItem('word', definition[0]);
-                setWinScreenText(`The word was ${definition[0]}. Try again tomorrow!`);
+            if (guesses.length + 1 === MAX_GUESSES){
+                localStorage.setItem('word', word);
+                setWinScreenText(`The word was ${word}. Try again tomorrow!`);
                 setEndCause(END_CAUSES.INCORRECT_GUESSES);
                 setWinScreenVisible(true);
             }
         }
         // Correct guess
         else { 
-            localStorage.setItem('word', definition[0]);
-            setWinScreenText(`Congratulations, the word is ${definition[0]}`);
+            localStorage.setItem('word', word);
+            setWinScreenText(`Congratulations, the word was ${word}`);
             setEndCause(END_CAUSES.CORRECT);
             setWinScreenVisible(true);
         }
-    }, [guessedWord, definition, hints, guesses, setHints, setGuesses, setToastVisible, setToastHeading, setToastMessage, inputClear, setInputClear, setWinScreenVisible, setWinScreenText, setEndCause]);
+    }, [guessedWord, word, guesses, setGuesses, setToastVisible, setToastHeading, setToastMessage, inputClear, setInputClear, setWinScreenVisible, setWinScreenText, setEndCause]);
 
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {

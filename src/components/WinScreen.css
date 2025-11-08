@@ -8,12 +8,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-@media (min-width: 768px) {
-    #win-screen h1 {
-        padding: 0px;
-    }
+  overflow: hidden;
 }
 
 #win-screen h1 {
@@ -22,6 +17,12 @@
     padding: 50px;
     font-size: 48px;
     text-align: center;
+}
+
+@media (min-width: 768px) {
+    #win-screen h1 {
+        padding: 0px;
+    }
 }
 
 #win-screen h2 {

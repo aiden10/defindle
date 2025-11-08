@@ -1,18 +1,23 @@
-
 import './Definition.css'
+import { useGame } from '../shared/GameContext';
 
-interface DefinitionContainerProps {
-    word: string
-    definition: string
-}
+export default function DefinitionContainer(){
+    const {definition, guesses} = useGame();
+    const numToShow = Math.min(2 + guesses.length * 2, definition.length);
 
-export default function DefinitionContainer({definition, word}: DefinitionContainerProps){
-    const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`\\b${escapedWord}(es|s)?\\b`, "gi");
-    const parsedDefinition = definition.replace(regex, "<REDACTED>");
     return (
         <div id='definition-container'>
-            <h1>{parsedDefinition}</h1>
+            {definition.map((d, i) => {
+                const isBlurred = i >= numToShow;
+                return (
+                    <h1 
+                        key={i} 
+                        className={isBlurred ? 'blurred' : ''}
+                    >
+                        <mark>{d}</mark>
+                    </h1>
+                );
+            })}
         </div>
     );
 }

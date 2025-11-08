@@ -2,10 +2,11 @@
 import json
 import requests
 import bs4
+import re
 import time
 
-current_index = 99
-target_index = 200
+current_index = 0
+target_index = 4999
 meriam_url = "https://www.merriam-webster.com/dictionary/"
 all_definitions = {}
 words = []
@@ -30,12 +31,23 @@ for i in range(current_index, target_index):
     definitions = soup.find_all("span", {"class": "dtText"})
     if len(definitions) == 0:
         print(f"Failed to get definitions for: {words[i]}")
-    definitions = [d.get_text()[2:] for d in definitions]
-    all_definitions[words[i]] = definitions
+    definitions = [d.get_text()[2:].strip() for d in definitions if "sense" not in d.get_text().lower()][:6]
+    escaped_word = re.escape(words[i])
+    regex_pattern = rf"\b{escaped_word}(?:es|s)?\b"
+    cleaned_definitions = []
+    for definition in definitions:
+        cleaned_definition = re.sub(regex_pattern, "<REDACTED>", definition, flags=re.IGNORECASE)
+        cleaned_definitions.append(cleaned_definition)
+
+    if len(cleaned_definitions) >= 6:
+        all_definitions[words[i]] = cleaned_definitions
+        # print(f"DEFNITIONS FOR: {words[i]}: {cleaned_definitions}")
+    else:
+        print(f"word: {words[i]} has fewer than 6 definitions, skipping")
     time.sleep(0.1)
 
 with open("scraper/all_definitions.json", "w", encoding="utf-8") as f:
-    json.dump(all_definitions, f, indent=4)
+    json.dump(all_definitions, f)
 
 with open("scraper/progress.json", "w") as f:
-    json.dump({"current_index": target_index-1}, f)
+    json.dump({"current_index": target_index}, f)

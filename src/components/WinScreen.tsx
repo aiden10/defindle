@@ -6,7 +6,7 @@ import { END_CAUSES } from '../shared/types';
 import { useGame } from '../shared/GameContext';
 
 export default function WinScreen(){
-    const { winScreenVisible, endCause, definition, winScreenText } = useGame();
+    const { winScreenVisible, endCause, word, winScreenText } = useGame();
     
     useEffect(() => {
         if (!winScreenVisible || endCause !== END_CAUSES.CORRECT) return;
@@ -16,12 +16,23 @@ export default function WinScreen(){
 
         (function frame() {
             confetti({
-                particleCount: 3,
-                startVelocity: 15,
-                spread: 180,
+                particleCount: 10,
+                startVelocity: 50,
+                spread: 120,
+                angle: 60,
                 origin: {
-                    x: 0.5 + (Math.random() - 0.5) * 0.2,
-                    y: 0.35 + (Math.random() - 0.5) * 0.2
+                    x: 0,
+                    y: 0
+                }
+            });
+            confetti({
+                particleCount: 10,
+                startVelocity: 50,
+                spread: 120,
+                angle: 120,
+                origin: {
+                    x: 1,
+                    y: 0
                 }
             });
             if (Date.now() < end) requestAnimationFrame(frame);
@@ -31,6 +42,6 @@ export default function WinScreen(){
     return winScreenVisible && 
     <div id='win-screen'>
         <h1>{winScreenText}</h1>
-        {(endCause === END_CAUSES.ALREADY_DONE) && <h2>{definition[0]}</h2>}
+        {(endCause === END_CAUSES.ALREADY_DONE) && <h2>{word}</h2>}
     </div>
 }
