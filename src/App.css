@@ -46,7 +46,7 @@ body {
     right: 0;
     bottom: 0;
     margin-bottom: 1.5vh;
-    padding: 0 12.5%;
+    padding: 0 5%;
     z-index: 10;
 }
 
@@ -64,6 +64,7 @@ body {
     padding: 1.5vh;
     cursor: pointer;
     z-index: 100;
+    visibility: hidden;
 }
 #github:hover {
     opacity: 0.5;
@@ -71,6 +72,7 @@ body {
 
 @media (min-width: 768px) {
     #github {
+        visibility: visible;
         top: 0;
         padding: 2vh;
     }

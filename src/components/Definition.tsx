@@ -3,7 +3,7 @@ import { useGame } from '../shared/GameContext';
 
 export default function DefinitionContainer(){
     const {definition, guesses} = useGame();
-    const numToShow = Math.min(2 + guesses.length * 2, definition.length);
+    const numToShow = Math.min(1 + guesses.length * 1, definition.length);
 
     return (
         <div id='definition-container'>

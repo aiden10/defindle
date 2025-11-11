@@ -1,16 +1,17 @@
 import { useEffect } from 'react';
+import { Button } from '@mui/material';
 import WordInput from './components/WordInput.tsx';
 import DefinitionContainer from './components/Definition.tsx';
-import GuessButton from './components/GuessButton.tsx';
-import GiveupButton from './components/GiveupButton.tsx';
 import WordToast from './components/WordToast.tsx';
+import WordModal from './components/WordModal.tsx';
 import WinScreen from './components/WinScreen.tsx';
 import Mistakes from './components/Mistakes.tsx';
-import './App.css';
-import './shared/constants.ts';
 import { END_CAUSES } from './shared/types.ts';
 import { useGame } from './shared/GameContext.tsx';
-import { PROD_URL, _TEST_URL } from './shared/constants.ts';
+import { PROD_URL, _TEST_URL, CUSTOM_WORD_URL } from './shared/constants.ts';
+import './shared/constants.ts';
+import './App.css';
+import './components/Buttons.css';
 
 export default function MyApp() {
   const {
@@ -20,13 +21,38 @@ export default function MyApp() {
     setWinScreenVisible,
     setToastHeading,
     setToastMessage,
-    setToastVisible
+    setToastVisible,
+    setModalOpen,
+    handleGuess,
+    handleGiveUp,
+    setCustomGame
   } = useGame();
   
   // fetch daily word, and definition, and check local storage
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const match = window.location.pathname.match(/\/custom\/([^/]+)/);
+        if (match) {
+          const base64Word = match[1];
+          setCustomGame(true);
+
+          const response = await fetch(`${CUSTOM_WORD_URL}?word=${encodeURIComponent(base64Word)}`);
+          if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+          }
+          const json = await response.json();
+          setDefinition(json.definition);
+          setWord(json.word);
+          let savedResult: string = localStorage.getItem('word') || "n/a";
+          if (json.word === savedResult){
+            setEndCause(END_CAUSES.ALREADY_DONE);
+            setWinScreenVisible(true);
+          }
+          return;
+        }
+
+        // Default daily word logic
         const response = await fetch(PROD_URL);
         if (!response.ok) {
           throw new Error(`Response status: ${response.status}`);
@@ -53,14 +79,14 @@ export default function MyApp() {
         setToastVisible(true);
       }
     };
-
     fetchData();
-  }, [setDefinition, setWord, setEndCause, setWinScreenVisible, setToastHeading, setToastMessage, setToastVisible]);
+  }, [setDefinition, setWord, setEndCause, setWinScreenVisible, setToastHeading, setToastMessage, setToastVisible, setCustomGame]);
 
   return (
     <div>
       <WinScreen />
       <WordToast/>
+      <WordModal/>
       <div id="top-info">
         <h2 id='instruction'><b>defindle</b>: guess the word by its <mark>definition</mark></h2>
         <Mistakes />
@@ -68,8 +94,9 @@ export default function MyApp() {
       <DefinitionContainer />
       <div id='inputs'>
         <WordInput />
-        <GuessButton />
-        <GiveupButton />
+        <Button variant="outlined" onClick={handleGuess}>guess</Button>
+        <Button variant="outlined" onClick={handleGiveUp}>give up?</Button>
+        <Button variant="outlined" onClick={() => setModalOpen(true)}>custom game</Button>
       </div>
       <a href="https://github.com/aiden10/defindle/" target='_blank' rel="noreferrer">
         <svg

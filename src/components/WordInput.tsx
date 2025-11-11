@@ -1,4 +1,3 @@
-
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import { FilterOptionsState } from '@mui/material';
@@ -18,32 +17,54 @@ const filterOptions = (options: string[], state: FilterOptionsState<string>) => 
     return baseFilter(options, state);
 }
 
-export default function WordInput(){
+interface WordInputProps {
+    customValue?: string;
+    onCustomChange?: (value: string) => void;
+    label?: string;
+}
+
+export default function WordInput({ customValue, onCustomChange, label = "word" }: WordInputProps = {}) {
     const textFieldRef = useRef<HTMLInputElement>(null);
     const { inputClear, guessedWord } = useGame();
+    
+    const isCustomMode = customValue !== undefined && onCustomChange !== undefined;
+    
     useEffect(() => {
-        if (textFieldRef.current && inputClear > 0) {
+        if (!isCustomMode && textFieldRef.current && inputClear > 0) {
             textFieldRef.current.focus();
         }
-    }, [inputClear]);
+    }, [inputClear, isCustomMode]);
 
     return (
         <Autocomplete
-            key={inputClear}
+            key={isCustomMode ? undefined : inputClear}
             disablePortal
             freeSolo
             noOptionsText="No matching words found"
             filterOptions={filterOptions}
             options={Object.keys(wordKeys)}
-            renderInput={(params) => <
-                TextField
+            value={isCustomMode ? customValue : undefined}
+            renderInput={(params) => 
+                <TextField
                     {...params} 
-                    label="word"
+                    label={label}
                     inputRef={textFieldRef}
-                    />
+                />
+            }
+            onChange={(event, value) => {
+                if (isCustomMode) {
+                    onCustomChange(value || "");
+                } else {
+                    guessedWord.current = value || "";
                 }
-            onChange={(event, value) => {guessedWord.current = value || ""}}
-            onInputChange={(event, value) => {guessedWord.current = value || ""}}
+            }}
+            onInputChange={(event, value) => {
+                if (isCustomMode) {
+                    onCustomChange(value || "");
+                } else {
+                    guessedWord.current = value || "";
+                }
+            }}
         />
     );
 }
