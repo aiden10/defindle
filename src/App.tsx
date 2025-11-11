@@ -9,6 +9,7 @@ import Mistakes from './components/Mistakes.tsx';
 import { END_CAUSES } from './shared/types.ts';
 import { useGame } from './shared/GameContext.tsx';
 import { PROD_URL, _TEST_URL, CUSTOM_WORD_URL } from './shared/constants.ts';
+import { Analytics } from "@vercel/analytics/react"
 import './shared/constants.ts';
 import './App.css';
 import './components/Buttons.css';
@@ -84,6 +85,7 @@ export default function MyApp() {
 
   return (
     <div>
+      <Analytics />
       <WinScreen />
       <WordToast/>
       <WordModal/>
