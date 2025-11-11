@@ -12,11 +12,12 @@
 }
 
 #win-screen h1 {
-    font-family: "Source Serif 4", serif;
-    font-weight: 400;
-    padding: 50px;
-    font-size: 48px;
-    text-align: center;
+  margin: 0;
+  font-family: "Source Serif 4", serif;
+  font-weight: 400;
+  padding: 0px 28px;
+  font-size: 48px;
+  text-align: center;
 }
 
 @media (min-width: 768px) {
@@ -25,7 +26,7 @@
     }
 }
 
-#win-screen h2 {
+.hidden-word {
   display: inline-block;
   font-family: "Source Serif 4", serif;
   font-weight: 300;
@@ -36,6 +37,11 @@
   border-radius: 4px;
 }
 
-#win-screen h2:hover{
+.hidden-word:hover {
     color: white;
+}
+
+#guess-string {
+  font-family: "Source Serif 4", serif;
+  font-weight: 300;
 }

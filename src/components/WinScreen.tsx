@@ -1,13 +1,22 @@
 import './WinScreen.css';
 import '../shared/types';
 import confetti from 'canvas-confetti';
+import { Button } from '@mui/material';
 import { useEffect } from 'react';
 import { END_CAUSES } from '../shared/types';
 import { useGame } from '../shared/GameContext';
 
 export default function WinScreen(){
-    const { winScreenVisible, endCause, word, winScreenText } = useGame();
-    
+    const { 
+        winScreenVisible,
+        endCause, 
+        word, 
+        winScreenText, 
+        guesses, 
+        setModalOpen,
+        restartGame
+    } = useGame();
+
     useEffect(() => {
         if (!winScreenVisible || endCause !== END_CAUSES.CORRECT) return;
 
@@ -42,6 +51,15 @@ export default function WinScreen(){
     return winScreenVisible && 
     <div id='win-screen'>
         <h1>{winScreenText}</h1>
-        {(endCause === END_CAUSES.ALREADY_DONE) && <h2>{word}</h2>}
+        {(endCause === END_CAUSES.ALREADY_DONE) && <h2 className='hidden-word'>{word}</h2>}
+        {(endCause === END_CAUSES.CORRECT) && <h2 id="guess-string">solved in {guesses.length + 1}</h2>}
+        <div style={{display: 'flex', flexDirection: 'row', padding: '15px'}}>
+            <Button variant="outlined"
+            style={{padding: '5px'}}
+            onClick={() => setModalOpen(true)}>custom game</Button>
+            <Button variant="outlined" 
+            style={{padding: '5px'}}
+            onClick={restartGame}>play again</Button>
+        </div>
     </div>
 }

@@ -53,6 +53,7 @@ export default function WordModal() {
           />
           <Button 
             variant="outlined"
+            fullWidth
             onClick={() => {
               const url = handleCustomWord(customWord);
               if (url !== "") {

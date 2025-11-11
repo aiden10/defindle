@@ -1,0 +1,21 @@
+
+#guesses-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1%;
+}
+
+.guess {
+    margin-bottom: 1.5%;
+    margin-left: 1vh;
+    font-size: 14px;
+    opacity: 25%;
+    user-select: none;
+    transition: color 0.3s, opacity 0.3s;
+}
+
+.guess:hover {
+    color: #a8a86b;
+    opacity:75%;
+    transition: color 0.3s, opacity 0.3s;
+}

@@ -6,6 +6,7 @@ import WordToast from './components/WordToast.tsx';
 import WordModal from './components/WordModal.tsx';
 import WinScreen from './components/WinScreen.tsx';
 import Mistakes from './components/Mistakes.tsx';
+import Guesses from './components/Guesses.tsx';
 import { END_CAUSES } from './shared/types.ts';
 import { useGame } from './shared/GameContext.tsx';
 import { PROD_URL, _TEST_URL, CUSTOM_WORD_URL } from './shared/constants.ts';
@@ -95,6 +96,7 @@ export default function MyApp() {
       </div>
       <DefinitionContainer />
       <div id='inputs'>
+        <Guesses/>
         <WordInput />
         <Button variant="outlined" onClick={handleGuess}>guess</Button>
         <Button variant="outlined" onClick={handleGiveUp}>give up?</Button>

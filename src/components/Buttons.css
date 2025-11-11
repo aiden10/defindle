@@ -2,6 +2,7 @@
 .MuiButton-root.MuiButton-outlined {
     font-size: 16px;
     border-color: black !important;
+    border: 2px solid #000;
     color: black !important;
     font-family: "Roboto Mono", monospace !important;
     font-optical-sizing: auto !important;
@@ -14,4 +15,5 @@
 }
 .MuiButton-root.MuiButton-outlined:hover {
     background-color: white;
+    opacity: 75%;
 }

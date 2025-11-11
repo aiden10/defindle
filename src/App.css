@@ -52,7 +52,7 @@ body {
 
 @media (min-width: 768px) {
   #inputs {
-    margin-bottom: 4vh;
+    margin-bottom: 2vh;
     padding: 0 12.5%;
     }
 }

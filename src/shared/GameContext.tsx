@@ -33,6 +33,7 @@ interface GameContextType {
     handleCustomWord: (customWord: string) => string;
     customGame: boolean;
     setCustomGame: (custom: boolean) => void;
+    restartGame: () => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -132,6 +133,12 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return () => window.removeEventListener('keydown', onKey);
     }, [handleGuess, modalOpen]);
 
+    const restartGame = () => {
+        setEndCause(END_CAUSES.NONE);
+        setGuesses([]);
+        setWinScreenVisible(false);
+    };
+
     const value = {
         inputClear,
         setInputClear,
@@ -160,7 +167,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         handleGiveUp,
         handleCustomWord,
         customGame,
-        setCustomGame
+        setCustomGame,
+        restartGame
     };
 
     return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
