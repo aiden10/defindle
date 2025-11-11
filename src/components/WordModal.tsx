@@ -1,5 +1,6 @@
 import './WordModal.css';
 import './Buttons.css';
+import './WordInput.css';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -81,12 +82,11 @@ export default function WordModal() {
                     fullWidth
                     variant="outlined"
                     value={customURL}
-                    InputProps={{
-                      readOnly: true,
+                    slotProps={{ input: { readOnly: true } }}
+                    sx={{
+                      mb: 2
                     }}
-                    sx={{ mb: 2 }}
                   />
-
                   <Button 
                     variant="outlined" 
                     fullWidth
