@@ -60,7 +60,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const handleGiveUp = useCallback(() => {
         if (customGame) setWinScreenText(`The word was ${word}`);
-        else setWinScreenText(`The word was ${word}. Play again tomorrow!`);
+        else setWinScreenText(`The word was ${word}. Try again tomorrow!`);
         setEndCause(END_CAUSES.GIVE_UP);
         setWinScreenVisible(true);
         if (!customGame) localStorage.setItem('word', word);

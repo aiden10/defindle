@@ -1,6 +1,6 @@
   
 .MuiButton-root.MuiButton-outlined {
-    font-size: 16px;
+    font-size: 14px;
     border-color: black !important;
     border: 2px solid #000;
     color: black !important;
@@ -16,4 +16,10 @@
 .MuiButton-root.MuiButton-outlined:hover {
     background-color: white;
     opacity: 75%;
+}
+
+@media (min-width: 768px) {
+  .MuiButton-root.MuiButton-outlined{
+    font-size: 18px;
+  }
 }
