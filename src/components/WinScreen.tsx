@@ -5,6 +5,9 @@ import { Button } from '@mui/material';
 import { useEffect } from 'react';
 import { END_CAUSES } from '../shared/types';
 import { useGame } from '../shared/GameContext';
+import { useUpdateStats } from '../shared/hooks';
+import Login from './Login';
+import Stats from './Stats';
 
 export default function WinScreen(){
     const { 
@@ -13,9 +16,25 @@ export default function WinScreen(){
         word, 
         winScreenText, 
         guesses, 
+        auth,
         setModalOpen,
-        restartGame
+        restartGame,
+        currentStreak,
+        completedGames,
+        giveUpCount,
+        incorrectGuesses,
+        correctGuesses,
+        daysPlayed,
     } = useGame();
+
+    const { updateStats } = useUpdateStats({
+        currentStreak,
+        completedGames,
+        giveUpCount,
+        incorrectGuesses,
+        correctGuesses,
+        daysPlayed
+    });
 
     useEffect(() => {
         if (!winScreenVisible || endCause !== END_CAUSES.CORRECT) return;
@@ -48,8 +67,14 @@ export default function WinScreen(){
         })();
     }, [winScreenVisible, endCause]);
 
+    useEffect(() => {
+    if (endCause !== END_CAUSES.NONE && endCause !== END_CAUSES.ALREADY_DONE) updateStats();
+  }, [endCause]);
+
     return winScreenVisible && 
     <div id='win-screen'>
+        { auth.user && <Stats top={true}/> }
+        { auth.user && <Stats top={false}/> }
         <h1>{winScreenText}</h1>
         {(endCause === END_CAUSES.ALREADY_DONE) && <h2 className='hidden-word'>{word}</h2>}
         {(endCause === END_CAUSES.CORRECT) && <h2 id="guess-string">solved in {guesses.length + 1}</h2>}
@@ -61,5 +86,13 @@ export default function WinScreen(){
             style={{padding: '5px'}}
             onClick={restartGame}>play again</Button>
         </div>
+        { !auth.user && !auth.loading && <Login/> }
+        { 
+          auth.user && <Button variant='outlined' 
+          onClick={() => {
+            localStorage.removeItem("authToken");
+            window.location.reload();
+          }}>sign out</Button> 
+        }
     </div>
 }

@@ -49,7 +49,7 @@ export default function WordModal() {
           <WordInput 
             customValue={customWord}
             onCustomChange={setCustomWord}
-            label="Word"
+            label="word"
           />
           <Button 
             variant="outlined"

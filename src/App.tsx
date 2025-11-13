@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Button } from '@mui/material';
 import WordInput from './components/WordInput.tsx';
 import DefinitionContainer from './components/Definition.tsx';
@@ -7,11 +7,12 @@ import WordModal from './components/WordModal.tsx';
 import WinScreen from './components/WinScreen.tsx';
 import Mistakes from './components/Mistakes.tsx';
 import Guesses from './components/Guesses.tsx';
+import Login from './components/Login.tsx';
 import { END_CAUSES } from './shared/types.ts';
 import { useGame } from './shared/GameContext.tsx';
-import { PROD_URL, _TEST_URL, CUSTOM_WORD_URL } from './shared/constants.ts';
+import { useAuth, useCustomWord, useDailyWord, useStats } from './shared/hooks.ts';
 import { Analytics } from "@vercel/analytics/react"
-import './shared/constants.ts';
+
 import './App.css';
 import './components/Buttons.css';
 
@@ -27,62 +28,69 @@ export default function MyApp() {
     setModalOpen,
     handleGuess,
     handleGiveUp,
-    setCustomGame
+    setCustomGame,
+    setAuth,
+    setCurrentStreak,
+    setCompletedGames,
+    setGiveUpCount,
+    setIncorrectGuesses,
+    setCorrectGuesses,
+    setDaysPlayed
   } = useGame();
+
+  const auth = useAuth();
+
+  const statSetters = useMemo(() => ({
+    setCurrentStreak,
+    setCompletedGames,
+    setGiveUpCount,
+    setIncorrectGuesses,
+    setCorrectGuesses,
+    setDaysPlayed
+  }), [setCurrentStreak, setCompletedGames, setGiveUpCount, setIncorrectGuesses, setCorrectGuesses, setDaysPlayed]);
   
-  // fetch daily word, and definition, and check local storage
+  useStats(statSetters);
+
+  const base64Word = useMemo(() => {
+    const match = window.location.pathname.match(/\/custom\/([^/]+)/);
+    return match ? match[1] : null;
+  }, []);
+
+  const isCustomGame = base64Word !== null;
+
+  const customWordData = useCustomWord(base64Word);
+  const dailyWordData = useDailyWord();
+
+  const { data, error, loading } = isCustomGame ? customWordData : dailyWordData;
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const match = window.location.pathname.match(/\/custom\/([^/]+)/);
-        if (match) {
-          const base64Word = match[1];
-          setCustomGame(true);
+    setAuth(auth);
+  }, [auth, setAuth]);
 
-          const response = await fetch(`${CUSTOM_WORD_URL}?word=${encodeURIComponent(base64Word)}`);
-          if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-          }
-          const json = await response.json();
-          setDefinition(json.definition);
-          setWord(json.word);
-          let savedResult: string = localStorage.getItem('word') || "n/a";
-          if (json.word === savedResult){
-            setEndCause(END_CAUSES.ALREADY_DONE);
-            setWinScreenVisible(true);
-          }
-          return;
-        }
+  useEffect(() => {
+    setCustomGame(isCustomGame);
+  }, [isCustomGame, setCustomGame]);
 
-        // Default daily word logic
-        const response = await fetch(PROD_URL);
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }
-        const json = await response.json();
-        setDefinition(json.definition);
-        setWord(json.word);
-        let savedResult: string = localStorage.getItem('word') || "n/a";
-        if (json.word === savedResult){
-          setEndCause(END_CAUSES.ALREADY_DONE);
-          setWinScreenVisible(true);
-        }
-      }
-      catch (error) {
-        setToastHeading("Error loading word");
-        if (error instanceof Error) {
-          console.error(error.message);
-          setToastMessage(error.message);
-        } 
-        else {
-          console.error('An unknown error occurred:', error);
-          setToastMessage('An unknown error occurred');
-        }
-        setToastVisible(true);
-      }
-    };
-    fetchData();
-  }, [setDefinition, setWord, setEndCause, setWinScreenVisible, setToastHeading, setToastMessage, setToastVisible, setCustomGame]);
+  useEffect(() => {
+    if (loading || !data) return;
+
+    setDefinition(data.definition);
+    setWord(data.word);
+
+    const savedResult = localStorage.getItem('word') || "n/a";
+    if (data.word === savedResult) {
+      setEndCause(END_CAUSES.ALREADY_DONE);
+      setWinScreenVisible(true);
+    }
+  }, [data, loading, setDefinition, setWord, setEndCause, setWinScreenVisible]);
+
+  useEffect(() => {
+    if (error) {
+      setToastHeading("Error loading word");
+      setToastMessage(error);
+      setToastVisible(true);
+    }
+  }, [error, setToastHeading, setToastMessage, setToastVisible]);
 
   return (
     <div>
@@ -91,16 +99,26 @@ export default function MyApp() {
       <WordToast/>
       <WordModal/>
       <div id="top-info">
-        <h2 id='instruction'><b>defindle</b>: guess the word by its <mark>definition</mark></h2>
+        <h2 id='instruction'><b>defindle</b>: guess the word by its <mark>definitions</mark></h2>
         <Mistakes />
       </div>
       <DefinitionContainer />
       <div id='inputs'>
         <Guesses/>
         <WordInput />
-        <Button variant="outlined" onClick={handleGuess}>guess</Button>
-        <Button variant="outlined" onClick={handleGiveUp}>give up?</Button>
-        <Button variant="outlined" onClick={() => setModalOpen(true)}>custom game</Button>
+        <div id='input-buttons'>
+          <Button variant="outlined" onClick={handleGuess}>guess</Button>
+          <Button variant="outlined" onClick={handleGiveUp}>give up?</Button>
+          <Button variant="outlined" onClick={() => setModalOpen(true)}>custom game</Button>
+          { 
+            auth.user && <Button variant='outlined' 
+            onClick={() => {
+              localStorage.removeItem("authToken");
+              window.location.reload();
+            }}>sign out</Button> 
+          }
+          { !auth.user && !auth.loading && <Login/> }
+        </div>
       </div>
       <a href="https://github.com/aiden10/defindle/" target='_blank' rel="noreferrer">
         <svg

@@ -2,7 +2,7 @@
 #definition-container h1 {
   color: rgb(45, 45, 45);
   font-family: "Source Serif 4", serif;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 350;
   font-style: normal;
   margin: 0.5em 0;
@@ -22,8 +22,7 @@
   white-space: pre-line;
   box-sizing: border-box;
   overflow-y: auto;
-  min-height: calc(100dvh - 250px);
-  max-height: calc(100dvh - 250px);
+  height: calc(100dvh - 300px);
   border-top: solid;
   border-top-width: 3px;
   border-bottom: solid;
@@ -39,8 +38,7 @@
   }
   
   #definition-container {
-    max-height: calc(100dvh - 350px);
-    min-height: calc(100dvh - 350px);
+    height: calc(100dvh - 350px);
   }
 }
 
@@ -50,8 +48,7 @@
   }
   
   #definition-container {
-    max-height: calc(100dvh - 310px);
-    min-height: calc(100dvh - 310px);
+    height: calc(100dvh - 310px);
   }
 }
 

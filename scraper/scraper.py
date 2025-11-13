@@ -39,7 +39,7 @@ for i in range(current_index, target_index):
         cleaned_definition = re.sub(regex_pattern, "<REDACTED>", definition, flags=re.IGNORECASE)
         cleaned_definitions.append(cleaned_definition)
 
-    if len(cleaned_definitions) >= 6:
+    if len(set(cleaned_definitions)) >= 6:
         all_definitions[words[i]] = cleaned_definitions
         # print(f"DEFNITIONS FOR: {words[i]}: {cleaned_definitions}")
     else:

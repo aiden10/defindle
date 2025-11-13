@@ -7,3 +7,11 @@ export enum END_CAUSES {
     INCORRECT_GUESSES
 };
 
+export type LoginResponse = {
+    credential: string;
+};
+
+export type Auth = {
+    loading: boolean;
+    user: string | null;
+};

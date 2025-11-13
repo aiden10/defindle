@@ -1,6 +1,5 @@
-
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
-import { END_CAUSES } from './types';
+import { Auth, END_CAUSES } from './types';
 import { MAX_GUESSES, BASE_URL } from './constants';
 import wordKeys from '../resources/words_keys.json';
 
@@ -34,6 +33,20 @@ interface GameContextType {
     customGame: boolean;
     setCustomGame: (custom: boolean) => void;
     restartGame: () => void;
+    auth: Auth;
+    setAuth: (auth: Auth) => void;
+    currentStreak: number;
+    setCurrentStreak: (streak: number) => void;
+    completedGames: number;
+    setCompletedGames: (games: number) => void;
+    giveUpCount: number;
+    setGiveUpCount: (count: number) => void;
+    incorrectGuesses: number;
+    setIncorrectGuesses: (guesses: number) => void;
+    correctGuesses: number;
+    setCorrectGuesses: (guesses: number) => void;
+    daysPlayed: number;
+    setDaysPlayed: (days: number) => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -52,6 +65,15 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [endCause, setEndCause] = useState(END_CAUSES.NONE);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [customGame, setCustomGame] = useState<boolean>(false);
+    const [auth, setAuth] = useState<Auth>({loading: true, user: null});
+    
+    // Stats
+    const [currentStreak, setCurrentStreak] = useState<number>(0);
+    const [completedGames, setCompletedGames] = useState<number>(0);
+    const [giveUpCount, setGiveUpCount] = useState<number>(0);
+    const [incorrectGuesses, setIncorrectGuesses] = useState<number>(0);
+    const [correctGuesses, setCorrectGuesses] = useState<number>(0);
+    const [daysPlayed, setDaysPlayed] = useState<number>(0);
 
     const handleCustomWord = (customWord: string) => {
         if (customWord in wordKeys) return `${BASE_URL}/custom/${btoa(customWord)}`;
@@ -59,19 +81,19 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const handleGiveUp = useCallback(() => {
+        setGiveUpCount((prev) => prev + 1);
         if (customGame) setWinScreenText(`The word was ${word}`);
         else setWinScreenText(`The word was ${word}. Try again tomorrow!`);
         setEndCause(END_CAUSES.GIVE_UP);
         setWinScreenVisible(true);
         if (!customGame) localStorage.setItem('word', word);
-    }, [word, setWinScreenText, setEndCause, setWinScreenVisible]);
+    }, [word, customGame, setWinScreenText, setEndCause, setWinScreenVisible]);
 
     const handleGuess = useCallback(() => {
         setInputClear((prev) => prev + 1);
 
         const currentGuess = (guessedWord.current || '').trim();
 
-        // Blank guess
         if (!currentGuess) {
             setToastVisible(true);
             setToastHeading('Guess cannot be blank!');
@@ -79,7 +101,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             return;
         }
 
-        // Invalid word
         if (!(currentGuess.toLowerCase() in wordKeys)) {
             setToastVisible(true);
             setToastHeading('Invalid word');
@@ -87,7 +108,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             return;
         }
 
-        // Already guessed
         if (guesses.includes(currentGuess)) {
             setToastVisible(true);
             setToastHeading('Already guessed');
@@ -95,11 +115,15 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             return;
         }
 
-        // Incorrect
         if (currentGuess.toLowerCase() !== word.toLowerCase()) {
+            setIncorrectGuesses((prev) => prev + 1);
             setGuesses((prev) => [...prev, currentGuess]);
             if (guesses.length + 1 >= MAX_GUESSES) {
-                localStorage.setItem('word', word);
+                if (!customGame){
+                    localStorage.setItem('word', word);
+                    setCurrentStreak(0);
+                }
+                setCompletedGames((prev) => prev + 1);
                 setWinScreenText(`The word was ${word}. Try again tomorrow!`);
                 setEndCause(END_CAUSES.INCORRECT_GUESSES);
                 setWinScreenVisible(true);
@@ -107,14 +131,19 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             return;
         }
 
-        // Correct
-        if (!customGame) localStorage.setItem('word', word);
+        if (!customGame) {
+            localStorage.setItem('word', word);
+            setCurrentStreak((prev) => prev + 1);
+        }
+        setCorrectGuesses((prev) => prev + 1);
+        setCompletedGames((prev) => prev + 1);
         setWinScreenText(`Congratulations, the word was ${word}`);
         setEndCause(END_CAUSES.CORRECT);
         setWinScreenVisible(true);
     }, [
         word,
         guesses,
+        customGame,
         setGuesses,
         setToastVisible,
         setToastHeading,
@@ -168,7 +197,21 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         handleCustomWord,
         customGame,
         setCustomGame,
-        restartGame
+        restartGame,
+        auth,
+        setAuth,
+        currentStreak,
+        setCurrentStreak,
+        completedGames,
+        setCompletedGames,
+        giveUpCount,
+        setGiveUpCount,
+        incorrectGuesses,
+        setIncorrectGuesses,
+        correctGuesses,
+        setCorrectGuesses,
+        daysPlayed,
+        setDaysPlayed
     };
 
     return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
