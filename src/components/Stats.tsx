@@ -24,19 +24,19 @@ export default function Stats(onTop: {top: boolean}) {
         <p>current streak: {currentStreak}</p>
         <p>completed games: {completedGames}</p>
         <p>times given up: {giveUpCount}</p>
-        <p>days played: {daysPlayed}</p>
+        {/* <p>days played: {daysPlayed}</p> */}
         <p>incorrect guesses: {incorrectGuesses}</p>
         <p>correct guesses: {correctGuesses}</p>
         <p>current streak: {currentStreak}</p>
         <p>completed games: {completedGames}</p>
         <p>times given up: {giveUpCount}</p>
-        <p>days played: {daysPlayed}</p>
+        {/* <p>days played: {daysPlayed}</p> */}
         <p>incorrect guesses: {incorrectGuesses}</p>
         <p>correct guesses: {correctGuesses}</p>
         <p>current streak: {currentStreak}</p>
         <p>completed games: {completedGames}</p>
         <p>times given up: {giveUpCount}</p>
-        <p>days played: {daysPlayed}</p>
+        {/* <p>days played: {daysPlayed}</p> */}
     </div>
     );
 }

@@ -92,7 +92,7 @@ export default function WinScreen(){
             })}
         </div>
         {(endCause === END_CAUSES.ALREADY_DONE) && <h2 className='hidden-word'>{word}</h2>}
-        {(endCause === END_CAUSES.CORRECT) && <h2 id="guess-string">solved in {guesses.length + 1}</h2>}
+        {(endCause === END_CAUSES.CORRECT) && <h2 id="guess-string">solved in {guesses.length}</h2>}
         <div style={{display: 'flex', flexDirection: 'row', padding: '15px'}}>
             <Button variant="outlined"
             style={{padding: '5px'}}
