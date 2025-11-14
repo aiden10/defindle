@@ -5,6 +5,7 @@ import './WordInput.css';
 import { useGame } from '../shared/GameContext';
 import { useEffect, useRef } from 'react';
 var wordKeys = require("../resources/words_keys.json");
+var customGameKeys = require("../resources/custom_game_keys.json");
 
 const baseFilter = createFilterOptions<string>({
     ignoreCase: true,
@@ -21,9 +22,10 @@ interface WordInputProps {
     customValue?: string;
     onCustomChange?: (value: string) => void;
     label?: string;
+    customGames?: boolean;
 }
 
-export default function WordInput({ customValue, onCustomChange, label = "word" }: WordInputProps = {}) {
+export default function WordInput({ customValue, onCustomChange, label = "word", customGames = false}: WordInputProps = {}) {
     const textFieldRef = useRef<HTMLInputElement>(null);
     const { inputClear, guessedWord } = useGame();
     
@@ -42,7 +44,7 @@ export default function WordInput({ customValue, onCustomChange, label = "word" 
             freeSolo
             noOptionsText="No matching words found"
             filterOptions={filterOptions}
-            options={Object.keys(wordKeys)}
+            options={customGames? Object.keys(customGameKeys) : Object.keys(wordKeys)}
             value={isCustomMode ? customValue : undefined}
             renderInput={(params) => 
                 <TextField

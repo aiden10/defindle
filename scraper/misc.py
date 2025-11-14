@@ -75,5 +75,3 @@ def remove_duplicate_definitions():
     print(f'removed: {removed_count}')
     print(f'{len(new_definitions)} new definitions')
     print(f'{len(all_definitions)} old definitions')
-
-remove_duplicate_definitions()

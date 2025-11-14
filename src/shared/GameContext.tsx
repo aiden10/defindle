@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { Auth, END_CAUSES } from './types';
 import { MAX_GUESSES, BASE_URL } from './constants';
 import wordKeys from '../resources/words_keys.json';
+import customGameKeys from '../resources/custom_game_keys.json';
 
 interface GameContextType {
     inputClear: number;
@@ -76,7 +77,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [daysPlayed, setDaysPlayed] = useState<number>(0);
 
     const handleCustomWord = (customWord: string) => {
-        if (customWord in wordKeys) return `${BASE_URL}/custom/${btoa(customWord)}`;
+        if (customWord in customGameKeys) return `${BASE_URL}/custom/${btoa(customWord)}`;
         return "";
     };
 

@@ -50,6 +50,7 @@ export default function WordModal() {
             customValue={customWord}
             onCustomChange={setCustomWord}
             label="word"
+            customGames={true}
           />
           <Button 
             variant="outlined"
