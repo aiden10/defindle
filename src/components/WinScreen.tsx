@@ -76,6 +76,21 @@ export default function WinScreen(){
         { auth.user && <Stats top={true}/> }
         { auth.user && <Stats top={false}/> }
         <h1>{winScreenText}</h1>
+        <div id='your-guesses'>
+            {guesses.map((guess, index) => {
+                const isCorrect = guess.toLowerCase() === word.toLowerCase();
+                return (
+                    <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <p className={isCorrect && endCause !== END_CAUSES.CORRECT ? 'correct-guess' : ''}>{guess}</p>
+                        {index !== guesses.length - 1 && (
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        )}
+                    </div>
+                );
+            })}
+        </div>
         {(endCause === END_CAUSES.ALREADY_DONE) && <h2 className='hidden-word'>{word}</h2>}
         {(endCause === END_CAUSES.CORRECT) && <h2 id="guess-string">solved in {guesses.length + 1}</h2>}
         <div style={{display: 'flex', flexDirection: 'row', padding: '15px'}}>

@@ -35,7 +35,8 @@ export default function MyApp() {
     setGiveUpCount,
     setIncorrectGuesses,
     setCorrectGuesses,
-    setDaysPlayed
+    setDaysPlayed,
+    setGuesses
   } = useGame();
 
   const auth = useAuth();
@@ -81,7 +82,26 @@ export default function MyApp() {
     if (data.word === savedResult) {
       setEndCause(END_CAUSES.ALREADY_DONE);
       setWinScreenVisible(true);
-    }
+    } 
+     
+    if (!isCustomGame) {
+      const guessesToday = localStorage.getItem("guessesToday");
+      if (guessesToday) {
+        try {
+          const parsedGuesses = JSON.parse(guessesToday);
+          if (Array.isArray(parsedGuesses)) {
+            setGuesses(parsedGuesses);
+          }
+        } catch (e) {
+          console.error("Failed to parse guessesToday:", e);
+        }
+      }
+
+      if (savedResult !== "n/a" && savedResult !== data.word) {
+        localStorage.removeItem("guessesToday");
+        setGuesses([]);
+      }
+    } 
   }, [data, loading, setDefinition, setWord, setEndCause, setWinScreenVisible]);
 
   useEffect(() => {

@@ -82,12 +82,15 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const handleGiveUp = useCallback(() => {
-        setGiveUpCount((prev) => prev + 1);
         if (customGame) setWinScreenText(`The word was ${word}`);
         else setWinScreenText(`The word was ${word}. Try again tomorrow!`);
         setEndCause(END_CAUSES.GIVE_UP);
         setWinScreenVisible(true);
-        if (!customGame) localStorage.setItem('word', word);
+        if (!customGame) {
+            setGiveUpCount((prev) => prev + 1);
+            setCurrentStreak(0);
+            localStorage.setItem('word', word);
+        }
     }, [word, customGame, setWinScreenText, setEndCause, setWinScreenVisible]);
 
     const handleGuess = useCallback(() => {
@@ -116,31 +119,38 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             return;
         }
 
+        // incorrect
         if (currentGuess.toLowerCase() !== word.toLowerCase()) {
-            setIncorrectGuesses((prev) => prev + 1);
             setGuesses((prev) => [...prev, currentGuess]);
-            if (guesses.length + 1 >= MAX_GUESSES) {
-                if (!customGame){
+            if (!customGame){
+                localStorage.setItem('guessesToday', JSON.stringify([...guesses, currentGuess]));
+                setIncorrectGuesses((prev) => prev + 1);
+                setCurrentStreak(0);
+                if (guesses.length + 1 >= MAX_GUESSES) {
                     localStorage.setItem('word', word);
-                    setCurrentStreak(0);
+                    setCompletedGames((prev) => prev + 1);
+                    setWinScreenText(`The word was ${word}. Try again tomorrow!`);
+                    setEndCause(END_CAUSES.INCORRECT_GUESSES);
+                    setWinScreenVisible(true);
                 }
-                setCompletedGames((prev) => prev + 1);
-                setWinScreenText(`The word was ${word}. Try again tomorrow!`);
-                setEndCause(END_CAUSES.INCORRECT_GUESSES);
-                setWinScreenVisible(true);
             }
             return;
         }
 
+        // correct
         if (!customGame) {
+            const updatedGuesses = [...guesses, currentGuess];
+            setCompletedGames((prev) => prev + 1);
+            setCorrectGuesses((prev) => prev + 1);
             localStorage.setItem('word', word);
+            localStorage.setItem('guessesToday', JSON.stringify(updatedGuesses));
             setCurrentStreak((prev) => prev + 1);
         }
-        setCorrectGuesses((prev) => prev + 1);
-        setCompletedGames((prev) => prev + 1);
+        setGuesses((prev) => [...prev, currentGuess]); // Add this line
         setWinScreenText(`Congratulations, the word was ${word}`);
         setEndCause(END_CAUSES.CORRECT);
         setWinScreenVisible(true);
+
     }, [
         word,
         guesses,

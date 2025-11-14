@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { LoginResponse } from "../shared/types";
 import { GENERATE_TOKEN_URL } from "../shared/constants";
 import { Button } from "@mui/material";
+import { useGame } from "../shared/GameContext";
 
 export default function Login() {
   const [googleLoaded, setGoogleLoaded] = useState(false);
+  const { setToastVisible, setToastHeading, setToastMessage } = useGame();
 
   useEffect(() => {
     if (window.google?.accounts?.id) {
@@ -38,17 +40,21 @@ export default function Login() {
 
   async function handleCredentialResponse(response: LoginResponse) {
     const idToken = response.credential;
+    try {
+      const res = await fetch(GENERATE_TOKEN_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: idToken }),
+      });
+      const data = await res.json();
+      localStorage.setItem("authToken", data.token);
+      window.location.reload();
 
-    const res = await fetch(GENERATE_TOKEN_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: idToken }),
-    });
-
-    const data = await res.json();
-    console.log(data);
-    localStorage.setItem("authToken", data.token);
-    window.location.reload();
+    } catch (err) {
+      setToastHeading("Error logging in");
+      setToastMessage(`Error: ${err instanceof Error ? err.message : 'An unknown error occurred'}`);
+      setToastVisible(true);
+    } 
   }
 
   return (
