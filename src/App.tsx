@@ -79,14 +79,16 @@ export default function MyApp() {
     setWord(data.word);
 
     const savedResult = localStorage.getItem('word') || "n/a";
-    if (data.word === savedResult) {
-      setEndCause(END_CAUSES.ALREADY_DONE);
-      setWinScreenVisible(true);
-    } 
-     
+    
     if (!isCustomGame) {
       const guessesToday = localStorage.getItem("guessesToday");
-      if (guessesToday) {
+      
+      if (savedResult !== "n/a" && savedResult !== data.word) {
+        localStorage.removeItem("guessesToday");
+        localStorage.removeItem("word");
+        setGuesses([]);
+      }
+      else if (guessesToday) {
         try {
           const parsedGuesses = JSON.parse(guessesToday);
           if (Array.isArray(parsedGuesses)) {
@@ -96,13 +98,13 @@ export default function MyApp() {
           console.error("Failed to parse guessesToday:", e);
         }
       }
+    }
 
-      if (savedResult !== "n/a" && savedResult !== data.word) {
-        localStorage.removeItem("guessesToday");
-        setGuesses([]);
-      }
-    } 
-  }, [data, loading, setDefinition, setWord, setEndCause, setWinScreenVisible]);
+    if (data.word === savedResult) {
+      setEndCause(END_CAUSES.ALREADY_DONE);
+      setWinScreenVisible(true);
+    }
+  }, [data, loading, setDefinition, setWord, setEndCause, setWinScreenVisible, setGuesses, isCustomGame]);
 
   useEffect(() => {
     if (error) {
