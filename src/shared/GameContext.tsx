@@ -125,11 +125,11 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             if (!customGame){
                 localStorage.setItem('guessesToday', JSON.stringify([...guesses, currentGuess]));
                 setIncorrectGuesses((prev) => prev + 1);
-                setCurrentStreak(0);
                 if (guesses.length + 1 >= MAX_GUESSES) {
                     localStorage.setItem('word', word);
                     setCompletedGames((prev) => prev + 1);
                     setWinScreenText(`The word was ${word}. Try again tomorrow!`);
+                    setCurrentStreak(0);
                     setEndCause(END_CAUSES.INCORRECT_GUESSES);
                     setWinScreenVisible(true);
                 }
