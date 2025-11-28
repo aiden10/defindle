@@ -146,7 +146,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             localStorage.setItem('guessesToday', JSON.stringify(updatedGuesses));
             setCurrentStreak((prev) => prev + 1);
         }
-        setGuesses((prev) => [...prev, currentGuess]); // Add this line
+        setGuesses((prev) => [...prev, currentGuess]);
         setWinScreenText(`Congratulations, the word was ${word}`);
         setEndCause(END_CAUSES.CORRECT);
         setWinScreenVisible(true);
